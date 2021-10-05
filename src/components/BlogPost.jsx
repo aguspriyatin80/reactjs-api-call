@@ -3,13 +3,11 @@ import { Fragment } from 'react/cjs/react.production.min';
 import Post from './Post';
 import axios from 'axios'
 
-let timestamp = new Date().getTime()
-
 class BlogPost extends Component {
     state = {
         post: [],
         formBlogPost: {
-            id: 1,
+            id: null,
             title: '',
             body: '',
             userId: 1
@@ -19,8 +17,11 @@ class BlogPost extends Component {
     handleFormChange = (event) => {
         // let title = event.target.value
         let formBlogPostNew = { ...this.state.formBlogPost }
-        // console.log(event.target.name)        
-        formBlogPostNew['id'] = timestamp
+        // console.log(event.target.name)  
+        let timestamp = new Date().getTime()
+        if (!this.state.isUpdate) {
+            formBlogPostNew['id'] = timestamp
+        }
         // console.log(timestamp)
         formBlogPostNew[event.target.name] = event.target.value
         // console.log('new form', formBlogPostNew)
@@ -32,14 +33,20 @@ class BlogPost extends Component {
     putDataToAPI = () => {
         axios.put(`http://localhost:3009/posts/${this.state.formBlogPost.id}`, this.state.formBlogPost)
             .then(res => {
-                console.log(res)
+                console.log(res.data)
+                this.setState({
+                    id: this.state.formBlogPost.id
+                })
                 this.getPostAPI()
+                this.handleFormChangeClear()
             })
     }
     postDataToAPI = () => {
         axios.post('http://localhost:3009/posts', this.state.formBlogPost)
             .then(res => {
                 console.log(res)
+                this.getPostAPI()
+                this.handleFormChangeClear()
             }, (err) => {
                 console.log(err)
             })
@@ -54,8 +61,9 @@ class BlogPost extends Component {
             this.postDataToAPI()
             // this.handleFormChangeClear()
 
+
         }
-        this.getPostAPI()
+
 
 
     }
@@ -102,6 +110,7 @@ class BlogPost extends Component {
         axios.delete(`http://localhost:3009/posts/${data}`)
             .then(res => {
                 console.log(res)
+
                 this.getPostAPI()
             })
 

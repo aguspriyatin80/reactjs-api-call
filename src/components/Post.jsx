@@ -29,7 +29,7 @@ const Post = (props) => {
                                 textOverflow: 'ellipsis',
                             }}
                             className="card-text">{props.data.body}</p>
-                        <button className="btn btn-danger" onClick={() => props.remove(props.data)}>Delete</button> {` `}
+                        <button className="btn btn-danger" onClick={() => props.remove(props.data.id)}>Delete</button> {` `}
                         <button className="btn btn-success" onClick={() => props.update(props.data)}>Edit</button>
                     </div>
                 </div>
